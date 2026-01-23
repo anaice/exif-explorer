@@ -1,0 +1,25 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Ruby / Bundler
+/.bundle/
+/vendor/bundle
+*.gem
+Gemfile.lock
+
+# RSpec
+/spec/examples.txt
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Coverage
+/coverage/
+
+# Build artifacts
+/pkg/
