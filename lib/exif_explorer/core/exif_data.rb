@@ -80,18 +80,44 @@ module ExifExplorer
       def gps_coordinates
         return nil unless has_gps?
 
-        lat = self["GPSLatitude"]
-        lon = self["GPSLongitude"]
+        lat = parse_coordinate(self["GPSLatitude"])
+        lon = parse_coordinate(self["GPSLongitude"])
         lat_ref = self["GPSLatitudeRef"] || "N"
         lon_ref = self["GPSLongitudeRef"] || "E"
 
-        lat = -lat if lat_ref == "S"
-        lon = -lon if lon_ref == "W"
+        lat = -lat if lat_ref.to_s.start_with?("S")
+        lon = -lon if lon_ref.to_s.start_with?("W")
 
-        { latitude: lat, longitude: lon }
+        { latitude: lat.round(6), longitude: lon.round(6) }
+      end
+
+      def google_maps_url
+        coords = gps_coordinates
+        return nil unless coords
+
+        "https://www.google.com/maps?q=#{coords[:latitude]},#{coords[:longitude]}"
       end
 
       private
+
+      def parse_coordinate(value)
+        return value.to_f if value.is_a?(Numeric)
+
+        # Parse DMS format: "25 deg 24' 31.00" S" or "25 deg 24' 31.00""
+        str = value.to_s
+
+        # Try to match DMS pattern
+        if str =~ /(\d+)\s*deg\s*(\d+)'\s*([\d.]+)"/i
+          degrees = $1.to_f
+          minutes = $2.to_f
+          seconds = $3.to_f
+          degrees + (minutes / 60.0) + (seconds / 3600.0)
+        elsif str =~ /^-?[\d.]+$/
+          str.to_f
+        else
+          0.0
+        end
+      end
 
       def extract_group(tags)
         result = {}

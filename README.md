@@ -128,10 +128,15 @@ puts exif.exposure  # Exposure settings
 puts exif.gps       # GPS coordinates
 puts exif.datetime  # Date/time tags
 
-# Check for GPS
+# GPS coordinates (automatically converted from DMS to decimal)
 if exif.has_gps?
   coords = exif.gps_coordinates
   puts "Location: #{coords[:latitude]}, #{coords[:longitude]}"
+  # => Location: -25.408611, -49.323325
+
+  # Direct Google Maps URL
+  puts exif.google_maps_url
+  # => https://www.google.com/maps?q=-25.408611,-49.323325
 end
 
 # Write EXIF data
