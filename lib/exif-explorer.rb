@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require_relative "exif_explorer/version"
-require_relative "exif_explorer/errors"
-require_relative "exif_explorer/configuration"
-require_relative "exif_explorer/core/exif_data"
-require_relative "exif_explorer/core/reader"
-require_relative "exif_explorer/core/writer"
-require_relative "exif_explorer/core/batch_processor"
-require_relative "exif_explorer/formatters/json_formatter"
-require_relative "exif_explorer/formatters/yaml_formatter"
-require_relative "exif_explorer/formatters/table_formatter"
+require_relative "exif-explorer/version"
+require_relative "exif-explorer/errors"
+require_relative "exif-explorer/configuration"
+require_relative "exif-explorer/core/exif_data"
+require_relative "exif-explorer/core/reader"
+require_relative "exif-explorer/core/writer"
+require_relative "exif-explorer/core/batch_processor"
+require_relative "exif-explorer/formatters/json_formatter"
+require_relative "exif-explorer/formatters/yaml_formatter"
+require_relative "exif-explorer/formatters/table_formatter"
 
 module ExifExplorer
   class << self

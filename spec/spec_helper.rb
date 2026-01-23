@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
-require "exif_explorer"
+require "exif-explorer"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

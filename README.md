@@ -38,7 +38,7 @@ brew install exiftool
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'exif_explorer'
+gem 'exif-explorer'
 ```
 
 And then execute:
@@ -50,7 +50,7 @@ bundle install
 Or install it yourself as:
 
 ```bash
-gem install exif_explorer
+gem install exif-explorer
 ```
 
 ## Usage
@@ -60,7 +60,7 @@ gem install exif_explorer
 Launch the interactive interface:
 
 ```bash
-exif_explorer
+exif-explorer
 ```
 
 The TUI provides:
@@ -74,45 +74,45 @@ The TUI provides:
 **Read EXIF data:**
 ```bash
 # Display as table (default)
-exif_explorer read photo.jpg
+exif-explorer read photo.jpg
 
 # Display as JSON
-exif_explorer read photo.jpg --format json
+exif-explorer read photo.jpg --format json
 
 # Display grouped by category
-exif_explorer read photo.jpg --grouped
+exif-explorer read photo.jpg --grouped
 
 # Read specific tags
-exif_explorer read photo.jpg --tags Make Model DateTimeOriginal
+exif-explorer read photo.jpg --tags Make Model DateTimeOriginal
 ```
 
 **Write EXIF data:**
 ```bash
 # Set tags
-exif_explorer write photo.jpg --set "Artist=John Doe" --set "Copyright=2024"
+exif-explorer write photo.jpg --set "Artist=John Doe" --set "Copyright=2024"
 
 # Without backup
-exif_explorer write photo.jpg --set "Artist=John" --no-backup
+exif-explorer write photo.jpg --set "Artist=John" --no-backup
 ```
 
 **Remove EXIF data:**
 ```bash
 # Remove specific tags
-exif_explorer remove photo.jpg --tags Artist Copyright
+exif-explorer remove photo.jpg --tags Artist Copyright
 
 # Remove all EXIF
-exif_explorer remove photo.jpg --all
+exif-explorer remove photo.jpg --all
 ```
 
 **Copy EXIF between files:**
 ```bash
-exif_explorer copy source.jpg destination.jpg
+exif-explorer copy source.jpg destination.jpg
 ```
 
 ### Ruby API
 
 ```ruby
-require 'exif_explorer'
+require 'exif-explorer'
 
 # Read EXIF data
 exif = ExifExplorer.read('photo.jpg')

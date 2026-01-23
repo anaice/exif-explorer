@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative "../lib/exif_explorer"
-require_relative "../lib/exif_explorer/cli/application"
-require_relative "../lib/exif_explorer/tui/application"
+require_relative "../lib/exif-explorer"
+require_relative "../lib/exif-explorer/cli/application"
+require_relative "../lib/exif-explorer/tui/application"
 
 if ARGV.empty?
   # Launch TUI when no arguments

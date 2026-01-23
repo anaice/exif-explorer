@@ -53,7 +53,7 @@ module ExifExplorer
 
       desc "version", "Show version"
       def version
-        puts "exif_explorer #{ExifExplorer::VERSION}"
+        puts "exif-explorer #{ExifExplorer::VERSION}"
       end
     end
   end

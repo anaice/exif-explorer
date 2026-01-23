@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "lib/exif_explorer/version"
+require_relative "lib/exif-explorer/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "exif_explorer"
+  spec.name = "exif-explorer"
   spec.version = ExifExplorer::VERSION
   spec.authors = ["Rafael Anaice"]
   spec.email = ["1187573+anaice@users.noreply.github.com"]
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
     end
   end
   spec.bindir = "bin"
-  spec.executables = ["exif_explorer"]
+  spec.executables = ["exif-explorer"]
   spec.require_paths = ["lib"]
 
   # EXIF backend
