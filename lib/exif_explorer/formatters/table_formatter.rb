@@ -55,7 +55,7 @@ module ExifExplorer
         when Time, DateTime
           value.strftime("%Y-%m-%d %H:%M:%S")
         when Float
-          format("%.4f", value)
+          sprintf("%.4f", value)
         when NilClass
           "-"
         else

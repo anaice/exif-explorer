@@ -5,12 +5,12 @@ require_relative "lib/exif_explorer/version"
 Gem::Specification.new do |spec|
   spec.name = "exif_explorer"
   spec.version = ExifExplorer::VERSION
-  spec.authors = ["Your Name"]
-  spec.email = ["your.email@example.com"]
+  spec.authors = ["Rafael Anaice"]
+  spec.email = ["1187573+anaice@users.noreply.github.com"]
 
   spec.summary = "Read and write EXIF metadata from images with an interactive TUI"
   spec.description = "A Ruby gem for reading and writing EXIF metadata from images (JPEG, TIFF, PNG, HEIC) with a Terminal User Interface for interactive exploration and editing."
-  spec.homepage = "https://github.com/yourusername/exif_explorer"
+  spec.homepage = "https://github.com/anaice/exif-explorer"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 
@@ -19,9 +19,8 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/CHANGELOG.md"
 
   spec.files = Dir.chdir(__dir__) do
-    `git ls-files -z`.split("\x0").reject do |f|
-      (File.expand_path(f) == __FILE__) ||
-        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile])
+    Dir["{lib}/**/*", "bin/*", "*.gemspec", "*.md", "LICENSE*", "Rakefile"].reject do |f|
+      File.directory?(f)
     end
   end
   spec.bindir = "bin"

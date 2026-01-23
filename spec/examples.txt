@@ -1,0 +1,14 @@
+example_id                          | status | run_time        |
+----------------------------------- | ------ | --------------- |
+./spec/core/reader_spec.rb[1:1:1:1] | passed | 0.00026 seconds |
+./spec/core/reader_spec.rb[1:1:2:1] | passed | 0.00019 seconds |
+./spec/core/reader_spec.rb[1:1:3:1] | passed | 0.00204 seconds |
+./spec/core/reader_spec.rb[1:2:1:1] | passed | 0.14521 seconds |
+./spec/core/reader_spec.rb[1:2:1:2] | passed | 0.26896 seconds |
+./spec/core/reader_spec.rb[1:3:1]   | passed | 0.13997 seconds |
+./spec/core/writer_spec.rb[1:1:1:1] | passed | 0.00027 seconds |
+./spec/core/writer_spec.rb[1:1:2:1] | passed | 0.00038 seconds |
+./spec/core/writer_spec.rb[1:2:1]   | passed | 0.91826 seconds |
+./spec/core/writer_spec.rb[1:2:2]   | passed | 0.54907 seconds |
+./spec/core/writer_spec.rb[1:3:1]   | passed | 1.17 seconds    |
+./spec/core/writer_spec.rb[1:4:1]   | passed | 1.01 seconds    |
