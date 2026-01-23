@@ -2,6 +2,13 @@
 
 A Ruby gem for reading and writing EXIF metadata from images with an interactive Terminal User Interface (TUI).
 
+Built on top of [mini_exiftool](https://github.com/janfri/mini_exiftool), this gem adds:
+- Structured access to EXIF data (grouped by category: camera, exposure, GPS, etc.)
+- GPS coordinate conversion from DMS to decimal format
+- Interactive TUI for exploring and editing metadata
+- CLI commands for scripting and automation
+- Automatic backup before modifications
+
 ## Features
 
 - Read EXIF metadata from JPEG, TIFF, PNG, HEIC, and other image formats
@@ -192,6 +199,12 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 bundle install
 bundle exec rspec
 ```
+
+## Acknowledgements
+
+- [mini_exiftool](https://github.com/janfri/mini_exiftool) - Ruby wrapper for ExifTool that powers this gem
+- [ExifTool](https://exiftool.org/) by Phil Harvey - The underlying tool for reading/writing metadata
+- [TTY Toolkit](https://ttytoolkit.org/) - Terminal UI components
 
 ## License
 
