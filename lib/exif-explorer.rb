@@ -7,6 +7,10 @@ require_relative "exif-explorer/core/exif_data"
 require_relative "exif-explorer/core/reader"
 require_relative "exif-explorer/core/writer"
 require_relative "exif-explorer/core/batch_processor"
+require_relative "exif-explorer/core/geo_utils"
+require_relative "exif-explorer/core/geocoder"
+require_relative "exif-explorer/core/map_overlay"
+require_relative "exif-explorer/core/image_stamper"
 require_relative "exif-explorer/formatters/json_formatter"
 require_relative "exif-explorer/formatters/yaml_formatter"
 require_relative "exif-explorer/formatters/table_formatter"
@@ -37,6 +41,10 @@ module ExifExplorer
 
     def batch_write(file_paths, tags)
       Core::BatchProcessor.new(file_paths).write_all(tags)
+    end
+
+    def stamp(image_path, output_path = nil, options = {})
+      Core::ImageStamper.new(image_path, options).stamp(output_path)
     end
   end
 end

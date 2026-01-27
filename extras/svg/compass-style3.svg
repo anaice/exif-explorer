@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Style 3: Baseado na referência exata - Ring escuro, centro vazado -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Outer decorative ring -->
+  <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(20,20,20,0.9)" stroke-width="6"/>
+
+  <!-- Inner ring border -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(50,50,50,0.8)" stroke-width="2"/>
+
+  <!-- Tick marks - Major (N,E,S,W) -->
+  <g stroke="rgba(200,200,200,0.95)" stroke-width="3" stroke-linecap="round">
+    <line x1="50" y1="3" x2="50" y2="13"/>
+    <line x1="50" y1="87" x2="50" y2="97"/>
+    <line x1="3" y1="50" x2="13" y2="50"/>
+    <line x1="87" y1="50" x2="97" y2="50"/>
+  </g>
+
+  <!-- Tick marks - Minor (NE, SE, SW, NW) -->
+  <g stroke="rgba(150,150,150,0.7)" stroke-width="2" stroke-linecap="round">
+    <line x1="83" y1="17" x2="77" y2="23"/>
+    <line x1="83" y1="83" x2="77" y2="77"/>
+    <line x1="17" y1="83" x2="23" y2="77"/>
+    <line x1="17" y1="17" x2="23" y2="23"/>
+  </g>
+
+  <!-- Small ticks for 8 intermediate directions -->
+  <g stroke="rgba(100,100,100,0.5)" stroke-width="1" stroke-linecap="round">
+    <line x1="70" y1="7" x2="67" y2="12"/>
+    <line x1="30" y1="7" x2="33" y2="12"/>
+    <line x1="93" y1="30" x2="88" y2="33"/>
+    <line x1="93" y1="70" x2="88" y2="67"/>
+    <line x1="70" y1="93" x2="67" y2="88"/>
+    <line x1="30" y1="93" x2="33" y2="88"/>
+    <line x1="7" y1="70" x2="12" y2="67"/>
+    <line x1="7" y1="30" x2="12" y2="33"/>
+  </g>
+
+  <!-- Cardinal letters with shadow effect -->
+  <g font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="13" text-anchor="middle">
+    <!-- Shadows -->
+    <text x="51" y="27" fill="rgba(0,0,0,0.5)">N</text>
+    <text x="51" y="81" fill="rgba(0,0,0,0.5)">S</text>
+    <text x="22" y="54" fill="rgba(0,0,0,0.5)">W</text>
+    <text x="79" y="54" fill="rgba(0,0,0,0.5)">E</text>
+    <!-- Main text -->
+    <text x="50" y="26" fill="white">N</text>
+    <text x="50" y="80" fill="rgba(200,200,200,0.9)">S</text>
+    <text x="21" y="53" fill="rgba(200,200,200,0.9)">W</text>
+    <text x="78" y="53" fill="rgba(200,200,200,0.9)">E</text>
+  </g>
+
+  <!-- Center dot (small) -->
+  <circle cx="50" cy="50" r="3" fill="rgba(60,60,60,0.8)"/>
+</svg>

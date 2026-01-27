@@ -5,7 +5,7 @@ module ExifExplorer
     class ExifData
       CAMERA_TAGS = %w[Make Model LensModel LensInfo Software].freeze
       EXPOSURE_TAGS = %w[ExposureTime FNumber ISO ShutterSpeedValue ApertureValue ExposureCompensation ExposureMode MeteringMode Flash WhiteBalance].freeze
-      GPS_TAGS = %w[GPSLatitude GPSLongitude GPSAltitude GPSLatitudeRef GPSLongitudeRef GPSAltitudeRef GPSTimeStamp GPSDateStamp].freeze
+      GPS_TAGS = %w[GPSLatitude GPSLongitude GPSAltitude GPSLatitudeRef GPSLongitudeRef GPSAltitudeRef GPSTimeStamp GPSDateStamp GPSImgDirection GPSImgDirectionRef].freeze
       DATETIME_TAGS = %w[DateTimeOriginal CreateDate ModifyDate DateTimeDigitized].freeze
       IMAGE_TAGS = %w[ImageWidth ImageHeight Orientation ColorSpace FileType FileSize MIMEType].freeze
 
@@ -98,7 +98,32 @@ module ExifExplorer
         "https://www.google.com/maps?q=#{coords[:latitude]},#{coords[:longitude]}"
       end
 
+      def has_image_direction?
+        !self["GPSImgDirection"].nil?
+      end
+
+      def image_direction
+        return nil unless has_image_direction?
+
+        direction = self["GPSImgDirection"].to_f.round(2)
+        reference = self["GPSImgDirectionRef"]
+
+        ref_label = case reference.to_s.upcase
+                    when "T", "TRUE NORTH" then "True North"
+                    when "M", "MAGNETIC NORTH" then "Magnetic North"
+                    else reference.to_s
+                    end
+
+        { degrees: direction, reference: ref_label, cardinal: degrees_to_cardinal(direction) }
+      end
+
       private
+
+      def degrees_to_cardinal(degrees)
+        directions = %w[N NNE NE ENE E ESE SE SSE S SSW SW WSW W WNW NW NNW]
+        index = ((degrees + 11.25) / 22.5).to_i % 16
+        directions[index]
+      end
 
       def parse_coordinate(value)
         return value.to_f if value.is_a?(Numeric)

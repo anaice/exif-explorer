@@ -35,4 +35,28 @@ module ExifExplorer
   end
 
   class ValidationError < Error; end
+
+  class NoGPSDataError < Error
+    def initialize(path)
+      super("No GPS coordinates found in: #{path}")
+    end
+  end
+
+  class GeocodingError < Error
+    def initialize(message)
+      super("Geocoding failed: #{message}")
+    end
+  end
+
+  class TileFetchError < Error
+    def initialize(url)
+      super("Failed to fetch map tile: #{url}")
+    end
+  end
+
+  class ImageStampError < Error
+    def initialize(message)
+      super("Image stamping failed: #{message}")
+    end
+  end
 end

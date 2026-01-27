@@ -41,6 +41,10 @@ Gem::Specification.new do |spec|
   # CLI
   spec.add_dependency "thor", "~> 1.3"
 
+  # Image stamping (map overlay)
+  spec.add_dependency "chunky_png", "~> 1.4"
+  spec.add_dependency "mini_magick", "~> 4.12"
+
   # Development dependencies
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
