@@ -64,6 +64,12 @@ module ExifExplorer
             choices << { name: "Edit Tags", value: :edit }
             choices << { name: "Export to JSON", value: :export_json }
             choices << { name: "Export to YAML", value: :export_yaml }
+
+            # Only show stamp option if image has GPS data
+            if @exif_data.has_gps?
+              choices << { name: "Generate Stamp (GPS Overlay)", value: :stamp }
+            end
+
             choices << { name: "Remove All EXIF", value: :remove_all }
           end
 
@@ -83,6 +89,8 @@ module ExifExplorer
             export_to_file(:json)
           when :export_yaml
             export_to_file(:yaml)
+          when :stamp
+            generate_stamp
           when :remove_all
             confirm_remove_all
           when :browse
@@ -126,6 +134,52 @@ module ExifExplorer
           end
 
           render
+        end
+
+        def generate_stamp
+          default_output = generate_stamp_filename
+          output_path = @prompt.ask("Output file:", default: default_output)
+          return render if output_path.nil?
+
+          puts @pastel.cyan("\nGenerating stamped image...")
+
+          # Show GPS info
+          coords = @exif_data.gps_coordinates
+          puts @pastel.dim("  Location: #{coords[:latitude]}, #{coords[:longitude]}")
+
+          if @exif_data.has_image_direction?
+            direction = @exif_data.image_direction
+            puts @pastel.dim("  Direction: #{direction[:degrees]}° #{direction[:cardinal]}")
+          end
+
+          puts @pastel.dim("  Fetching map tiles...")
+
+          begin
+            stamper = Core::ImageStamper.new(@file)
+            result = stamper.stamp(output_path)
+            puts @pastel.green("\nStamped image generated successfully!")
+            puts "  #{@pastel.cyan("Output")}: #{result}"
+          rescue NoGPSDataError
+            puts @pastel.red("\nError: No GPS data found in image")
+          rescue TileFetchError => e
+            puts @pastel.red("\nError: Failed to fetch map tiles")
+            puts @pastel.dim(e.message)
+          rescue GeocodingError => e
+            puts @pastel.yellow("\nWarning: Could not fetch address")
+            puts @pastel.dim(e.message)
+          rescue StandardError => e
+            puts @pastel.red("\nError: #{e.message}")
+          end
+
+          @prompt.keypress("\nPress any key to continue...")
+          render
+        end
+
+        def generate_stamp_filename
+          dir = File.dirname(@file)
+          base = File.basename(@file, ".*")
+          ext = File.extname(@file)
+          File.join(dir, "#{base}_stamped#{ext}")
         end
       end
     end

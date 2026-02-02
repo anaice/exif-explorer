@@ -83,8 +83,10 @@ module ExifExplorer
       method_option :compass_arrow_color, type: :string, default: "#00d4d4",
                                           desc: "Compass arrow color (hex)"
       # Info box
-      method_option :info_font_size, type: :numeric, default: 16,
+      method_option :info_font_size, type: :numeric, default: 10,
                                      desc: "Info text font size"
+      method_option :info_font_family, type: :string, default: "DejaVu-Sans-Mono",
+                                       desc: "Info text font family"
       method_option :info_font_color, type: :string, default: "#ffffff",
                                       desc: "Info text color (hex)"
       method_option :info_bg_color, type: :string, default: "#000000",

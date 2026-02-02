@@ -84,6 +84,7 @@ module ExifExplorer
 
           # Info box options
           opts[:info_font_size] = @options[:info_font_size].to_i if @options[:info_font_size]
+          opts[:info_font_family] = @options[:info_font_family] if @options[:info_font_family]
           opts[:info_font_color] = @options[:info_font_color] if @options[:info_font_color]
           opts[:info_bg_color] = @options[:info_bg_color] if @options[:info_bg_color]
           opts[:info_bg_opacity] = @options[:info_bg_opacity].to_f if @options[:info_bg_opacity]

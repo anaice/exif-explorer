@@ -41,7 +41,7 @@ module ExifExplorer
         return nil if degrees.nil?
 
         cardinal = degrees_to_cardinal(degrees)
-        "#{degrees.round}° #{cardinal}"
+        "#{format('%.2f', degrees)}° #{cardinal}"
       end
 
       # Calculate pixel offset within a tile for given coordinates

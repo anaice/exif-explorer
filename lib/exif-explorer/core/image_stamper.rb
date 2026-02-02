@@ -18,7 +18,7 @@ module ExifExplorer
         minimap_width: 150,
         minimap_height: 150,
         minimap_zoom: 16,
-        minimap_opacity: 0.60,
+        minimap_opacity: 0.6,
         minimap_border_radius: 8,
         # Compass options
         compass_width: 90,
@@ -26,7 +26,8 @@ module ExifExplorer
         compass_style: 1,
         compass_arrow_color: "#00d4d4",
         # Info box options
-        info_font_size: 16,
+        info_font_size: 10,
+        info_font_family: "DejaVu-Sans-Mono",
         info_font_color: "#ffffff",
         info_bg_color: "#000000",
         info_bg_opacity: 0.50,
@@ -234,23 +235,20 @@ module ExifExplorer
           end
         end
 
-        # Draw the fixed arrow pointing UP (camera direction indicator)
+        # Draw the fixed marker triangle pointing UP (camera direction indicator)
         center = size / 2
-        arrow_length = (size * 0.30).round
-        arrow_top = center - arrow_length
-        head_width = (size * 0.08).round
         arrow_color = @options[:compass_arrow_color] || "#00d4d4"
 
-        compass_img.combine_options do |c|
-          # Draw arrow shaft (thick line from center going UP)
-          c.stroke(arrow_color)
-          c.strokewidth(3)
-          c.draw("line #{center},#{center} #{center},#{arrow_top + head_width}")
+        # Elongated triangle from center to near top edge
+        triangle_top = (size * 0.12).round      # Distance from top edge
+        triangle_bottom = center + 2            # Slightly below center
+        triangle_width = (size * 0.06).round    # Half-width at base
 
-          # Draw arrow head (triangle pointing UP)
+        compass_img.combine_options do |c|
           c.fill(arrow_color)
           c.stroke("none")
-          c.draw("polygon #{center},#{arrow_top} #{center - head_width},#{arrow_top + head_width + 4} #{center + head_width},#{arrow_top + head_width + 4}")
+          # Draw elongated isoceles triangle pointing UP
+          c.draw("polygon #{center},#{triangle_top} #{center - triangle_width},#{triangle_bottom} #{center + triangle_width},#{triangle_bottom}")
         end
 
         compass_img.write(tempfile.path)
@@ -305,16 +303,25 @@ module ExifExplorer
 
       def compose_image(output_path, minimap_file, compass_file, direction, address, datetime)
         image = MiniMagick::Image.open(@image_path)
+
+        # Auto-orient the image based on EXIF orientation
+        image.auto_orient
+
         margin = @options[:margin]
 
-        # Add minimap (bottom-left) with opacity
+        # Calculate info bar height for positioning minimap above it
+        info_bar_height = 0
+        if @options[:show_info]
+          info_bar_height = calculate_info_bar_height(image, direction, address, datetime)
+        end
+
+        # Add minimap (bottom-left, above info bar) with opacity
         if minimap_file
           minimap_img = MiniMagick::Image.open(minimap_file.path)
 
           # Apply opacity to minimap
-          opacity = @options[:minimap_opacity] || 0.7
+          opacity = @options[:minimap_opacity] || 0.6
           if opacity < 1.0
-            opacity_percent = (opacity * 100).round
             minimap_img.combine_options do |c|
               c.alpha("on")
               c.channel("A")
@@ -323,10 +330,13 @@ module ExifExplorer
             end
           end
 
+          # Position above info bar
+          minimap_bottom_offset = margin + info_bar_height + (info_bar_height > 0 ? margin : 0)
+
           image = image.composite(minimap_img) do |c|
             c.compose "Over"
             c.gravity "SouthWest"
-            c.geometry "+#{margin}+#{margin}"
+            c.geometry "+#{margin}+#{minimap_bottom_offset}"
           end
         end
 
@@ -339,7 +349,7 @@ module ExifExplorer
           end
         end
 
-        # Add info text (bottom-right)
+        # Add info bar (bottom, full width)
         if @options[:show_info]
           image = add_info_overlay(image, direction, address, datetime)
         end
@@ -347,36 +357,51 @@ module ExifExplorer
         image.write(output_path)
       end
 
-      def add_info_overlay(image, direction, address, datetime)
-        lines = build_info_lines(direction, address, datetime)
-        return image if lines.empty?
+      def calculate_info_bar_height(image, direction, address, datetime)
+        font_size = @options[:info_font_size] || 16
+        padding_v = 8
+        line_height = font_size + 4
 
+        is_landscape = image.width > image.height
+        lines = build_info_lines_for_orientation(direction, address, datetime, is_landscape)
+
+        return 0 if lines.empty?
+
+        lines.size * line_height + padding_v * 2
+      end
+
+      def add_info_overlay(image, direction, address, datetime)
         # Get options
         font_size = @options[:info_font_size] || 16
+        font_family = @options[:info_font_family] || "DejaVu-Sans-Mono"
         font_color = @options[:info_font_color] || "#ffffff"
         bg_color = @options[:info_bg_color] || "#000000"
-        bg_opacity = @options[:info_bg_opacity] || 0.7
+        bg_opacity = @options[:info_bg_opacity] || 0.5
         border_radius = @options[:info_border_radius] || 8
         margin = @options[:margin] || 10
 
-        line_height = font_size + 6
-        padding = 12
+        # Detect orientation
+        is_landscape = image.width > image.height
 
-        # Estimate text width (approximate)
-        max_line_length = lines.map(&:length).max
-        text_width = (max_line_length * font_size * 0.58).round
-        text_height = lines.size * line_height + padding * 2
+        # Build info text based on orientation
+        lines = build_info_lines_for_orientation(direction, address, datetime, is_landscape)
+        return image if lines.empty?
+
+        line_height = font_size + 4
+        padding_v = 8
+        padding_h = 14
+
+        # Calculate bar dimensions (full width)
+        bar_height = lines.size * line_height + padding_v * 2
+        rect_x1 = margin
+        rect_y1 = image.height - bar_height - margin
+        rect_x2 = image.width - margin
+        rect_y2 = image.height - margin
 
         # Convert hex color to rgba
         bg_rgba = hex_to_rgba(bg_color, bg_opacity)
 
-        # Calculate rectangle position
-        rect_x1 = image.width - text_width - margin - padding
-        rect_y1 = image.height - text_height - margin
-        rect_x2 = image.width - margin
-        rect_y2 = image.height - margin
-
-        # Draw background rectangle with rounded corners
+        # Draw background bar with rounded corners
         image.combine_options do |c|
           c.fill(bg_rgba)
           if border_radius > 0
@@ -386,20 +411,57 @@ module ExifExplorer
           end
         end
 
-        # Add text lines
+        # Add text lines using annotate for better positioning
         lines.each_with_index do |line, index|
-          y_offset = image.height - margin - padding - (lines.size - index - 1) * line_height - font_size + 2
+          text_y = rect_y1 + padding_v + (index * line_height) + line_height - 3
 
           image.combine_options do |c|
             c.fill(font_color)
-            c.font("DejaVu-Sans")
+            c.font(font_family)
             c.pointsize(font_size)
-            c.gravity("NorthWest")
-            c.draw("text #{image.width - text_width - margin},#{y_offset} '#{escape_text(line)}'")
+            c.draw("text #{rect_x1 + padding_h},#{text_y} '#{escape_text(line)}'")
           end
         end
 
         image
+      end
+
+      def build_info_lines_for_orientation(direction, address, datetime, is_landscape)
+        # Format individual parts
+        date_str = datetime ? GeoUtils.format_datetime(datetime) : nil
+        dir_str = direction ? GeoUtils.format_direction(direction[:degrees]) : nil
+
+        # 3 lines:
+        # Line 1: date and direction
+        # Line 2: street address
+        # Line 3: neighborhood / city, state
+        lines = []
+
+        # Line 1
+        line1_parts = [date_str, dir_str].compact.reject(&:empty?)
+        lines << line1_parts.join("   ") unless line1_parts.empty?
+
+        # Lines 2 and 3 from address
+        if address
+          # Line 2: street
+          if address[:street]
+            street = address[:street]
+            street = "#{address[:number]} #{street}" if address[:number]
+            lines << street
+          end
+
+          # Line 3: neighborhood / city, state
+          line3_parts = []
+          line3_parts << address[:neighborhood] if address[:neighborhood]
+          if address[:city]
+            city = address[:city]
+            city = "#{city}, #{address[:state]}" if address[:state]
+            line3_parts << city
+          end
+          lines << line3_parts.join(" / ") unless line3_parts.empty?
+        end
+
+        lines
       end
 
       def hex_to_rgba(hex, opacity)
